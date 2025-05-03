@@ -38,7 +38,7 @@ const startPuppeteer = async () => {
 };
 
 // POST endpoint to receive credentials and interact with the page
-app.post('/create-facture', async (req: Request, res: Response) => {
+app.post('/scrap', async (req: Request, res: Response) => {
     let isFormFilledWithSuccess = false
     if(!isLoggedIn){
         res.status(400).send({ error: 'you are not logged in' });
