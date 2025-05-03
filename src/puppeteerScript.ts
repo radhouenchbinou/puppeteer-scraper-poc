@@ -39,6 +39,7 @@ const startPuppeteer = async () => {
 
 // POST endpoint to receive credentials and interact with the page
 app.post('/create-facture', async (req: Request, res: Response) => {
+    let isFormFilledWithSuccess = false
     if(!isLoggedIn){
         res.status(400).send({ error: 'you are not logged in' });
         return;
@@ -93,6 +94,7 @@ app.post('/create-facture', async (req: Request, res: Response) => {
             const submitSelector = "div:nth-of-type(3) input[type='submit']";
             await page.waitForSelector(submitSelector, { visible: true });
             await page.click(submitSelector);
+            isFormFilledWithSuccess = true;
         }else {
             await clearInput(page,fnameSelector);
             await clearInput(page,lnameSelector);
@@ -106,6 +108,12 @@ app.post('/create-facture', async (req: Request, res: Response) => {
         // await browser.close();
 
         console.log('Interaction completed.');
+        if(isFormFilledWithSuccess){
+            showAlert(page,'you have successfully submitted the form please check your email, this page will be closed in 20 seconds',false);
+            setTimeout(async () => {
+                await browser.close();
+            },20000)
+        }
     } catch (error) {
         console.error('Error running Puppeteer script:', error);
     } finally {
